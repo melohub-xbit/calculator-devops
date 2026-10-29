@@ -18,6 +18,15 @@ java -jar target/calculator.jar
 
 App runs on port 8081. Health check: http://localhost:8081/actuator/health
 
+## Docker
+
+Multi-stage build - maven image builds the jar, then only the jar is copied into a small JRE image.
+
+```
+docker build -t calculator .
+docker run -d -p 8081:8081 --name calculator calculator
+```
+
 ## API
 
 All endpoints take two numbers `a` and `b` as query params.
