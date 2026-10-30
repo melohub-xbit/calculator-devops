@@ -12,3 +12,4 @@ Dockerfile
 docker-compose.yml
 Jenkinsfile
 README.md
+nginx/
