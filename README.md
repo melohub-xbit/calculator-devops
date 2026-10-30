@@ -99,3 +99,33 @@ Errors (missing param, not a number, divide by zero) return HTTP 400:
 $ curl "http://localhost:8081/api/v1/divide?a=5&b=0"
 {"status":400,"error":"Bad Request","message":"Division by zero is not allowed","path":"/api/v1/divide"}
 ```
+
+## Screenshots
+
+Pipeline stage view (build #2 failed at Deploy, fixed in #3):
+
+![stage view](docs/screenshots/01-jenkins-stage-view.png)
+
+Test results published in Jenkins:
+
+![tests](docs/screenshots/02-jenkins-tests.png)
+
+Build started by the GitHub webhook:
+
+![build trigger](docs/screenshots/07-jenkins-build-trigger.png)
+
+Email notification:
+
+![email](docs/screenshots/03-email-notification.png)
+
+Running containers:
+
+![docker ps](docs/screenshots/04-docker-ps.png)
+
+API responses through nginx:
+
+![api](docs/screenshots/05-api-responses.png)
+
+Image on Docker Hub:
+
+![docker hub](docs/screenshots/06-dockerhub-tags.png)
