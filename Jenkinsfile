@@ -69,7 +69,7 @@ pipeline {
             steps {
                 sh 'docker compose build nginx'
                 // --wait blocks until the healthchecks pass
-                sh 'docker compose up -d --wait --wait-timeout 120'
+                sh 'docker compose up -d --no-build --wait --wait-timeout 120'
                 sh 'docker compose ps'
                 // call the app through nginx to check the whole path works
                 sh 'docker compose exec -T nginx wget -qO- http://localhost/actuator/health'
