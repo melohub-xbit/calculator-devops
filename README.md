@@ -42,6 +42,38 @@ docker compose down
 The app has a healthcheck on `/actuator/health` and nginx only starts once the app is healthy.
 `IMAGE_NAME` and `IMAGE_TAG` can be set to run a specific image (used by Jenkins).
 
+## CI/CD with Jenkins
+
+Jenkins runs in its own container (`jenkins/`), with maven and the docker cli installed. It uses the
+host docker through the mounted socket. Plugins, credentials, email and the pipeline job are all set up
+with configuration-as-code (`jenkins/casc.yaml`), so there is no setup wizard. ngrok runs next to it
+so GitHub can reach the webhook.
+
+Setup:
+
+```
+cp .env.example .env      # fill in the values
+docker compose -f jenkins/docker-compose.yml --env-file .env up -d --build
+```
+
+Jenkins is on http://localhost:8082 (user `admin`). On linux set `DOCKER_GID` to the id of the
+`docker` group so jenkins can use the socket.
+
+GitHub webhook: `https://<ngrok-domain>/github-webhook/`, push events, content type json.
+
+Pipeline stages (`Jenkinsfile`):
+
+1. Checkout - pull the code
+2. Build - `mvn clean package -DskipTests`
+3. Test - `mvn test`, publish JUnit reports
+4. Docker Build - build `mysticmoose/calculator:<build number>` and `:latest`
+5. Push - push both tags to Docker Hub using the `dockerhub` credential
+6. Deploy - `docker compose up -d --wait`, then call health and an endpoint through nginx
+
+An email is sent on success and on failure.
+
+Docker Hub image: https://hub.docker.com/r/mysticmoose/calculator
+
 ## API
 
 All endpoints take two numbers `a` and `b` as query params.
