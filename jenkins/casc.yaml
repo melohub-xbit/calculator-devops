@@ -1,0 +1,65 @@
+jenkins:
+  systemMessage: "Calculator CI/CD"
+  numExecutors: 2
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  globalNodeProperties:
+    - envVars:
+        env:
+          - key: "NOTIFY_EMAIL"
+            value: "${NOTIFY_EMAIL}"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: "dockerhub"
+              username: "mysticmoose"
+              password: "${DOCKER_PAT}"
+              description: "Docker Hub access token"
+
+unclassified:
+  location:
+    url: "https://${NGROK_DOMAIN}/"
+    adminAddress: "${SMTP_USER}"
+  mailer:
+    smtpHost: "smtp.gmail.com"
+    smtpPort: "465"
+    useSsl: true
+    authentication:
+      username: "${SMTP_USER}"
+      password: "${SMTP_PASSWORD}"
+
+jobs:
+  - script: >
+      pipelineJob('calculator-pipeline') {
+        properties {
+          pipelineTriggers {
+            triggers {
+              githubPush()
+            }
+          }
+        }
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/melohub-xbit/calculator-devops.git')
+                }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }
