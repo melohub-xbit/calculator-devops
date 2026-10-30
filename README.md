@@ -27,6 +27,21 @@ docker build -t calculator .
 docker run -d -p 8081:8081 --name calculator calculator
 ```
 
+## Docker Compose
+
+Runs the app behind an nginx reverse proxy. Only nginx is published (port 80), the app
+container is reachable only inside the `calc-net` network.
+
+```
+docker compose up -d --build
+docker compose ps
+curl "http://localhost/api/v1/add?a=2&b=3"
+docker compose down
+```
+
+The app has a healthcheck on `/actuator/health` and nginx only starts once the app is healthy.
+`IMAGE_NAME` and `IMAGE_TAG` can be set to run a specific image (used by Jenkins).
+
 ## API
 
 All endpoints take two numbers `a` and `b` as query params.
