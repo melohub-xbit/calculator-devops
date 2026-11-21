@@ -145,3 +145,6 @@ API responses through nginx:
 Image on Docker Hub:
 
 ![docker hub](docs/screenshots/06-dockerhub-tags.png)
+
+
+# CHANGE TO TRIGGER PIPELINE
