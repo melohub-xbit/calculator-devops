@@ -74,6 +74,22 @@ An email is sent on success and on failure.
 
 Docker Hub image: https://hub.docker.com/r/mysticmoose/calculator
 
+## Stopping and starting
+
+Stop everything (containers and data are kept):
+
+```
+docker compose stop
+docker compose -f jenkins/docker-compose.yml --env-file .env stop
+```
+
+Start it again (jenkins first so the webhook works):
+
+```
+docker compose -f jenkins/docker-compose.yml --env-file .env start
+docker compose start
+```
+
 ## API
 
 All endpoints take two numbers `a` and `b` as query params.
